@@ -15,7 +15,7 @@ perrow=$4 #4
 demo=$5 #1 #change this to 0 (zero) to enable feeds, else it plays the demo rtsp feed
 
 #loads file that has the feeds
-readarray cameras < ./rtsp_feeds
+readarray cameras < /nano/init.d/rtsp_feeds
 
 #---- There should be no need to edit anything below this line ----
 
