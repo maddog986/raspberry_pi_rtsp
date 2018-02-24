@@ -86,7 +86,7 @@ case "$1" in
     
     # Update self
     update)
-        sudo curl -o /etc/init.d/rtsp_viewer https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
+        sudo curl -H 'Cache-Control: no-cache' -o /etc/init.d/rtsp_viewer https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
 	sudo chmod 755 /etc/init.d/rtsp_viewer    
     ;;
 
