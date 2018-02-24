@@ -9,11 +9,10 @@
 # Description:
 ### END INIT INFO
 
-width=1920
-height=1080
-perrow=4 #
-
-demo=1 #change this to 0 (zero) to enable feeds below
+width=$1 #1920
+height=$2 #1080
+perrow=$3 #4
+demo=$5 #1 #change this to 0 (zero) to enable feeds, else it plays the demo rtsp feed
 
 #loads file that has the feeds
 readarray cameras < ./rtsp_feeds
@@ -83,6 +82,12 @@ case "$1" in
     stop)
         sudo killall omxplayer.bin
         echo "Camera Display Ended"
+    ;;
+    
+    # Update self
+    update)
+        sudo curl -o /etc/init.d/rtsp_viewer https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
+	sudo chmod 755 /etc/init.d/rtsp_viewer    
     ;;
 
     *)
