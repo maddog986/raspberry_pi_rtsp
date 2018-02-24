@@ -1,13 +1,4 @@
 #!/bin/bash
-### BEGIN INIT INFO
-# Provides: displaycameras
-# Required-Start:
-# Required-Stop:
-# Default-Start: 2 3 4 5
-# Default-Stop: 0 1 6
-# Short-Description: Displays camera feeds for monitoring
-# Description:
-### END INIT INFO
 
 width=$2 #1920
 height=$3 #1080
@@ -15,7 +6,7 @@ perrow=$4 #4
 demo=$5 #1 #change this to 0 (zero) to enable feeds, else it plays the demo rtsp feed
 
 #loads file that has the feeds
-readarray cameras < /etc/init.d/rtsp_feeds
+readarray cameras < /home/pi/rtsp_feeds
 
 #---- There should be no need to edit anything below this line ----
 
@@ -86,12 +77,12 @@ case "$1" in
     
     # Update self
     update)
-        sudo curl -H 'Cache-Control: no-cache' -o /etc/init.d/rtsp_viewer https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
-	sudo chmod 755 /etc/init.d/rtsp_viewer    
+        sudo curl -H 'Cache-Control: no-cache' -o /home/pi/rtsp_viewer https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
+	sudo chmod 755 /home/pi/rtsp_viewer    
     ;;
 
     *)
-        echo "Usage: /etc/init.d/displaycameras {start|stop|repair}"
+        echo "Usage: /home/pi/rtsp_viewer {start|stop|repair} {screen width} {screen height} {cameras per row} {demo mode 0|1}"
         exit 1
     ;;
 esac
