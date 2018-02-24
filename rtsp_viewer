@@ -14,15 +14,9 @@ height=1080
 perrow=4 #
 
 demo=1 #change this to 0 (zero) to enable feeds below
-cameras[0]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[1]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[2]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[3]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[4]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[5]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[6]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[7]="rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov"
-cameras[8]=""
+
+#loads file that has the feeds
+readarray cameras < ./rtsp_feeds
 
 #---- There should be no need to edit anything below this line ----
 
