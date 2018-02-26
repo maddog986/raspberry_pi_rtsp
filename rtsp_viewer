@@ -98,7 +98,7 @@ case "$1" in
 
     install)
         # Update && Upgrade the Package Manager Sources
-        #apt-get -y update && apt-get -y upgrade
+        apt-get -y update && apt-get -y upgrade
 
         #create config file
         echo "width=1920
@@ -125,10 +125,10 @@ demo=1" > /home/pi/rtsp_viewer.cfg
         fi
 
         # Auto start the cameras
-        #update-rc.d rtsp_viewer defaults
+        update-rc.d rtsp_viewer defaults
 
         # Reboot so changes take effect
-        #reboot
+        reboot
     ;;
 
     *)
