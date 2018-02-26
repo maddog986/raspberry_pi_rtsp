@@ -1,11 +1,5 @@
 #!/bin/bash
-#install command:
-#mkdir /home/pi/rtsp_vewier && cd /home/pi/rtsp_vewier && wget https://github.com/maddog986/raspberry_pi_rtsp/archive/master.zip && unzip master.zip && mv raspberry_pi_rtsp-master/* . && rm -R raspberry_pi_rtsp-master && rm master.zip && chmod -R 755 /home/pi/rtsp_viewer && sudo ./rtsp_install.sh
-
 set -e #exit if any issues
-
-# Change hostname
-echo "camera_viewer" | tee /etc/hostname
 
 # Upgrade the Package Manager Sources
 apt-get -y upgrade
