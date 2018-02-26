@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #load config file
-source /home/pi/rtsp_config.cfg
+source /home/pi/rtsp_viewer/rtsp_config.cfg
 
 #loads file that has the feeds
-readarray cameras < /home/pi/rtsp_feeds.txt
+readarray cameras < /home/pi/rtsp_viewer/rtsp_feeds.txt
 
 #---- There should be no need to edit anything below this line ----
 
