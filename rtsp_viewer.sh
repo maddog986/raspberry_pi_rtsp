@@ -75,8 +75,10 @@ case "$1" in
 
     # Update self
     update)
+        /home/pi/rtsp_viewer/rtsp_viewer.sh stop
         curl -o /home/pi/rtsp_viewer/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
 	    chmod 755 /home/pi/rtsp_viewer/rtsp_viewer.sh
+        /home/pi/rtsp_viewer/rtsp_viewer.sh start
     ;;
 
     *)
