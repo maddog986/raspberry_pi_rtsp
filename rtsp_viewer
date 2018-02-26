@@ -17,10 +17,10 @@
 case "$1" in
     start|repair)
         #load config file
-        source /home/pi/rtsp_config.cfg
+        source /home/pi/rtsp_viewer.cfg
 
         #loads file that has the feeds
-        readarray cameras < /home/pi/rtsp_feeds.txt
+        readarray cameras < /home/pi/rtsp_viewer.txt
 
         if [ "$1" = "start" ]; then
             killall omxplayer screen
@@ -107,7 +107,7 @@ case "$1" in
         echo "width=1920
 height=1080
 perrow=1
-demo=1" > /home/pi/rtsp_config.cfg
+demo=1" > /home/pi/rtsp_viewer.cfg
 
         #create feeds file
         echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_feeds.cfg
@@ -147,7 +147,7 @@ demo=1" > /home/pi/rtsp_config.cfg
         fi
 
         # Auto start the cameras
-        sudo update-rc.d rtsp_viewer defaults
+        update-rc.d rtsp_viewer defaults
 
         # Reboot so changes take effect
         reboot
