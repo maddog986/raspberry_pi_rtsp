@@ -11,7 +11,7 @@
 # Description:       Turns a Raspbery Pi into a RTSP Viewer for multiple feeds.
 ### END INIT INFO
 
-#cd /etc/init.d && sudo wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer && sudo chmod +x ./rtsp_viewer && sudo ./rtsp_viewer install
+#cd /etc/init.d && sudo wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer -O rtsp_viewer && sudo chmod +x ./rtsp_viewer && sudo ./rtsp_viewer install
 
 # Start displaying camera feeds
 case "$1" in
@@ -90,7 +90,7 @@ case "$1" in
         /etc/init.d/rtsp_viewer stop
 
         # Update script
-        wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
+        wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer -O rtsp_viewer
 
         # Start it up again
         /etc/init.d/rtsp_viewer start
@@ -98,7 +98,7 @@ case "$1" in
 
     install)
         # Update && Upgrade the Package Manager Sources
-        apt-get -y update && apt-get -y upgrade
+        #apt-get -y update && apt-get -y upgrade
 
         #create config file
         echo "width=1920
@@ -106,8 +106,13 @@ height=1080
 perrow=1
 demo=1" > /home/pi/rtsp_viewer.cfg
 
+        # Setup a cron job file
+        echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer repair
+0 5 * * * sudo /etc/init.d/rtsp_viewer update
+0 6 * * * sudo reboot" > /etc/cron.d/rtsp_viewer
+
         #create feeds file
-        echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_feeds.cfg
+        echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_viewer.txt
 
         # Install the Packages
         if [ $(dpkg-query -W -f='${Status}' omxplayer 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
@@ -119,35 +124,11 @@ demo=1" > /home/pi/rtsp_viewer.cfg
             apt-get install screen  -y
         fi
 
-        # Check to see if crontab already created
-        if [ crontab -l | grep -q 'rtsp_viewer.sh update' -eq 0 ]; then
-            # Runs install script to keep script up to date
-            (crontab -l; echo "0 5 * * * sudo /etc/init.d/rtsp_viewer update")| crontab -
-        fi
-
-        # Check to see if crontab already created
-        if [ crontab -l | grep -q 'sudo reboot' -eq 0 ]; then
-            # Reboots system at 6am everyday
-            (crontab -l ; echo "0 6 * * * sudo reboot")| crontab -
-        fi
-
-        # Check to see if crontab already created
-        if [ crontab -l | grep -q 'rtsp_viewer.sh repair' -eq 0 ]; then
-            # Runs script every minute between 6am and 11pm to make sure feeds are running
-            (crontab -l ; echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer repair")| crontab -
-        fi
-
-        # Check to see if crontab already created
-        if [ crontab -l | grep -q 'rtsp_viewer.sh start' -eq 0 ]; then
-            # Makes sure script gets started upon boot
-            (crontab -l ; echo "@reboot sudo /etc/init.d/rtsp_viewer start")| crontab -
-        fi
-
         # Auto start the cameras
-        update-rc.d rtsp_viewer defaults
+        #update-rc.d rtsp_viewer defaults
 
         # Reboot so changes take effect
-        reboot
+        #reboot
     ;;
 
     *)
