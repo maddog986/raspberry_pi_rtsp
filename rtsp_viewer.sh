@@ -75,12 +75,12 @@ case "$1" in
 
     # Update self
     update)
-        curl -o /home/pi/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
-	    chmod 755 /home/pi/rtsp_viewer.sh
+        curl -o /home/pi/rtsp_viewer/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
+	    chmod 755 /home/pi/rtsp_viewer/rtsp_viewer.sh
     ;;
 
     *)
-        echo "Usage: /home/pi/rtsp_viewer.sh {start|stop|repair} {screen width} {screen height} {cameras per row} {demo mode 0|1}"
+        echo "Usage: /home/pi/rtsp_viewer/rtsp_viewer.sh {start|stop|repair} {screen width} {screen height} {cameras per row} {demo mode 0|1}"
         exit 1
     ;;
 esac
