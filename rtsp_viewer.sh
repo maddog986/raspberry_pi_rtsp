@@ -12,7 +12,7 @@ readarray cameras < /home/pi/rtsp_feeds.txt
 case "$1" in
     start|repair)
         if [ "$1" = "start" ]; then
-            sudo killall omxplayer screen
+            killall omxplayer screen
         fi
 
         totalcameras=${#cameras[@]}
@@ -44,7 +44,7 @@ case "$1" in
 	        fi
 
             #if camera not already playing, run the command
-            if (!(sudo screen -list | grep -q $name)) then
+            if (!(screen -list | grep -q $name)) then
                 if [[ $i != "" ]]; then
                     command="screen -dmS $name sh -c 'omxplayer --avdict rtsp_transport:tcp --win $x,$y,$x2,$y2 $i --live -n -1'"
                     echo $name Loading: $command
@@ -69,14 +69,14 @@ case "$1" in
 
     # Stop displaying camera feeds
     stop)
-        sudo killall omxplayer.bin
+        killall omxplayer.bin
         echo "Camera Display Ended"
     ;;
 
     # Update self
     update)
-        sudo curl -o /home/pi/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
-	    sudo chmod 755 /home/pi/rtsp_viewer.sh
+        curl -o /home/pi/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
+	    chmod 755 /home/pi/rtsp_viewer.sh
     ;;
 
     *)
