@@ -22,22 +22,14 @@ then
   sudo apt-get install screen  -y
 fi
 
-# Change directory for script
-mkdir /home/pi/rtsp_viewer=
-cd /home/pi/rtsp_viewer
-
-# Change permissions to enable script
-#chmod +x rtsp_viewer.sh
-sudo chmod 755 /home/pi/rtsp_viewer.sh
-
 # Runs install script to keep script up to date
-(sudo crontab -l; echo "0 5 * * * sudo /home/pi/rtsp_viewer.sh update")| sudo crontab -
+(sudo crontab -l; echo "0 5 * * * sudo /home/pi/rtsp_viewer/rtsp_viewer.sh update")| sudo crontab -
 
 # Reboots system at 6am everyday
 (sudo crontab -l ; echo "0 6 * * * sudo reboot")| sudo crontab -
 
 # Runs script every minute between 6am and 11pm to make sure feeds are running
-(sudo crontab -l ; echo "* 6-23 * * * sudo /home/pi/rtsp_viewer.sh repair")| sudo crontab -
+(sudo crontab -l ; echo "* 6-23 * * * sudo /home/pi/rtsp_viewer/rtsp_viewer.sh repair")| sudo crontab -
 
 # Makes sure script gets started upon boot
-(sudo crontab -l ; echo "@reboot sudo /home/pi/rtsp_viewer.sh start")| sudo crontab -
+(sudo crontab -l ; echo "@reboot sudo /home/pi/rtsp_viewer/rtsp_viewer.sh start")| sudo crontab -
