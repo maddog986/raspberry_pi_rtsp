@@ -23,10 +23,8 @@ then
 fi
 
 # Change directory for script
-cd /home/pi
-
-# Download file using wget
-wget https://github.com/maddog986/raspberry_pi_rtsp/archive/master.zip && unzip master.zip
+mkdir /home/pi/rtsp_viewer=
+cd /home/pi/rtsp_viewer
 
 # Change permissions to enable script
 #chmod +x rtsp_viewer.sh
