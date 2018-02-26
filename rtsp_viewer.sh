@@ -1,16 +1,17 @@
 #!/bin/bash
+#cd /etc/init.d && wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer && sudo chmod +x ./rtsp_viewer && sudo ./rtsp_viewer install
 
-#load config file
-source /home/pi/rtsp_viewer/rtsp_config.cfg
-
-#loads file that has the feeds
-readarray cameras < /home/pi/rtsp_viewer/rtsp_feeds.txt
-
-#---- There should be no need to edit anything below this line ----
+set -e #exit if any issues
 
 # Start displaying camera feeds
 case "$1" in
     start|repair)
+        #load config file
+        source $HOME/rtsp_config.cfg
+
+        #loads file that has the feeds
+        readarray cameras < $HOME/rtsp_feeds.txt
+
         if [ "$1" = "start" ]; then
             killall omxplayer screen
         fi
@@ -75,14 +76,72 @@ case "$1" in
 
     # Update self
     update)
-        /home/pi/rtsp_viewer/rtsp_viewer.sh stop
-        curl -o /home/pi/rtsp_viewer/rtsp_viewer.sh https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer.sh
-	    chmod 755 /home/pi/rtsp_viewer/rtsp_viewer.sh
-        /home/pi/rtsp_viewer/rtsp_viewer.sh start
+        # Stop script
+        /etc/init.d/rtsp_viewer stop
+
+        # Update script
+        wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer
+
+        # Start it up again
+        /etc/init.d/rtsp_viewer start
+    ;;
+
+    install)
+        # Upgrade the Package Manager Sources
+        apt-get -y upgrade
+
+        # Update the Package Manger Sources
+        apt-get -y update
+
+        #create config file
+        echo "width=1920
+height=1080
+perrow=2
+demo=1" > $HOME/rtsp_config.cfg
+
+        #create feeds file
+        touch $HOME/rtsp_feeds.cfg
+
+        # Install the Packages
+        if [ $(dpkg-query -W -f='${Status}' omxplayer 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+            apt-get install omxplayer -y
+        fi
+
+        # Install the Packages
+        if [ $(dpkg-query -W -f='${Status}' screen 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+            apt-get install screen  -y
+        fi
+
+        # Check to see if crontab already created
+        if [ crontab -l | grep -q 'rtsp_viewer.sh update' -eq 0 ]; then
+            # Runs install script to keep script up to date
+            (crontab -l; echo "0 5 * * * sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh update")| crontab -
+        fi
+
+        # Check to see if crontab already created
+        if [ crontab -l | grep -q 'sudo reboot' -eq 0 ]; then
+            # Reboots system at 6am everyday
+            (crontab -l ; echo "0 6 * * * sudo reboot")| crontab -
+        fi
+
+        # Check to see if crontab already created
+        if [ crontab -l | grep -q 'rtsp_viewer.sh repair' -eq 0 ]; then
+            # Runs script every minute between 6am and 11pm to make sure feeds are running
+            (crontab -l ; echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh repair")| crontab -
+        fi
+
+        # Check to see if crontab already created
+        if [ crontab -l | grep -q 'rtsp_viewer.sh start' -eq 0 ]; then
+            # Makes sure script gets started upon boot
+            (crontab -l ; echo "@reboot sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh start")| crontab -
+        fi
+
+        # Reboot so changes take effect
+        reboot
     ;;
 
     *)
-        echo "Usage: /home/pi/rtsp_viewer/rtsp_viewer.sh {start|stop|repair} {screen width} {screen height} {cameras per row} {demo mode 0|1}"
+        echo "Usage: /etc/init.d/rtsp_viewer {start|stop|repair|update}"
         exit 1
     ;;
 esac
