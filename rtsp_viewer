@@ -1,16 +1,26 @@
 #!/bin/bash
-#cd /etc/init.d && wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer && sudo chmod +x ./rtsp_viewer && sudo ./rtsp_viewer install
+#/etc/init.d/rtsp_viewer
 
-set -e #exit if any issues
+### BEGIN INIT INFO
+# Provides:          rtsp_viewer
+# Required-Start:    $network $syslog $remote_fs
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: RTSP Viewier
+# Description:       Turns a Raspbery Pi into a RTSP Viewer for multiple feeds.
+### END INIT INFO
+
+#cd /etc/init.d && sudo wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer && sudo chmod +x ./rtsp_viewer && sudo ./rtsp_viewer install
 
 # Start displaying camera feeds
 case "$1" in
     start|repair)
         #load config file
-        source $HOME/rtsp_config.cfg
+        source /home/pi/rtsp_config.cfg
 
         #loads file that has the feeds
-        readarray cameras < $HOME/rtsp_feeds.txt
+        readarray cameras < /home/pi/rtsp_feeds.txt
 
         if [ "$1" = "start" ]; then
             killall omxplayer screen
@@ -96,11 +106,11 @@ case "$1" in
         #create config file
         echo "width=1920
 height=1080
-perrow=2
-demo=1" > $HOME/rtsp_config.cfg
+perrow=1
+demo=1" > /home/pi/rtsp_config.cfg
 
         #create feeds file
-        touch $HOME/rtsp_feeds.cfg
+        echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_feeds.cfg
 
         # Install the Packages
         if [ $(dpkg-query -W -f='${Status}' omxplayer 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
@@ -115,7 +125,7 @@ demo=1" > $HOME/rtsp_config.cfg
         # Check to see if crontab already created
         if [ crontab -l | grep -q 'rtsp_viewer.sh update' -eq 0 ]; then
             # Runs install script to keep script up to date
-            (crontab -l; echo "0 5 * * * sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh update")| crontab -
+            (crontab -l; echo "0 5 * * * sudo /etc/init.d/rtsp_viewer update")| crontab -
         fi
 
         # Check to see if crontab already created
@@ -127,14 +137,17 @@ demo=1" > $HOME/rtsp_config.cfg
         # Check to see if crontab already created
         if [ crontab -l | grep -q 'rtsp_viewer.sh repair' -eq 0 ]; then
             # Runs script every minute between 6am and 11pm to make sure feeds are running
-            (crontab -l ; echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh repair")| crontab -
+            (crontab -l ; echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer repair")| crontab -
         fi
 
         # Check to see if crontab already created
         if [ crontab -l | grep -q 'rtsp_viewer.sh start' -eq 0 ]; then
             # Makes sure script gets started upon boot
-            (crontab -l ; echo "@reboot sudo /etc/init.d/rtsp_viewer/rtsp_viewer.sh start")| crontab -
+            (crontab -l ; echo "@reboot sudo /etc/init.d/rtsp_viewer start")| crontab -
         fi
+
+        # Auto start the cameras
+        sudo update-rc.d rtsp_viewer defaults
 
         # Reboot so changes take effect
         reboot
@@ -145,3 +158,5 @@ demo=1" > $HOME/rtsp_config.cfg
         exit 1
     ;;
 esac
+
+exit 0
