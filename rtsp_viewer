@@ -97,11 +97,8 @@ case "$1" in
     ;;
 
     install)
-        # Upgrade the Package Manager Sources
-        apt-get -y upgrade
-
-        # Update the Package Manger Sources
-        apt-get -y update
+        # Update && Upgrade the Package Manager Sources
+        apt-get -y update && apt-get -y upgrade
 
         #create config file
         echo "width=1920
