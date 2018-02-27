@@ -104,7 +104,7 @@ case "$1" in
         /etc/init.d/rtsp_viewer stop
 
         # Update script
-        wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer -O rtsp_viewer
+        wget https://raw.githubusercontent.com/maddog986/raspberry_pi_rtsp/master/rtsp_viewer -O /etc/init.d/rtsp_viewer
 
         # Start it up again
         /etc/init.d/rtsp_viewer start
