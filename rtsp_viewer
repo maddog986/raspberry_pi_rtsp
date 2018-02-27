@@ -24,10 +24,10 @@ case "$1" in
         fi
 
         # monitor size, doesnt work right yet
-        #width=$(tvservice -s | grep -Po "([0-9]{4}x[0-9]{4})" | cut -d'x' -f1)
-        #height=$(tvservice -s | grep -Po "([0-9]{4}x[0-9]{4})" | cut -d'x' -f2)
-        width=1920
-        height=1080
+        width=$(tvservice -s | grep -Po "([0-9]{3,4}x[0-9]{3,4})" | cut -d'x' -f1)
+        height=$(tvservice -s | grep -Po "([0-9]{3,4}x[0-9]{3,4})" | cut -d'x' -f2)
+        #width=1920
+        #height=1080
 
         totalcameras=${#cameras[@]}
         echo Total Cameras: $totalcameras
