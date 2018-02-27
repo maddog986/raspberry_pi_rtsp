@@ -16,9 +16,6 @@
 # Start displaying camera feeds
 case "$1" in
     start|repair)
-        #load config file
-        source /home/pi/rtsp_viewer.cfg
-
         #loads file that has the feeds
         readarray cameras < /home/pi/rtsp_viewer.txt
 
@@ -26,13 +23,32 @@ case "$1" in
             killall omxplayer screen
         fi
 
+        # monitor size
+        width=$(tvservice -s | grep -Po "([0-9]{4}x[0-9]{4})" | cut -d'x' -f1)
+        height=$(tvservice -s | grep -Po "([0-9]{4}x[0-9]{4})" | cut -d'x' -f2)
+
         totalcameras=${#cameras[@]}
         echo Total Cameras: $totalcameras
 
-        totalrows=$(( $totalcameras / $perrow ))
+        if (( $totalcameras % 2 )); then
+            (( totalcameras += 1 ))
+        fi
+
+        if [ "${#cameras[@]}" -eq 1 ]; then
+            perrow=1
+            totalcameras=1;
+        elif [ "$totalcameras" -eq 2 ]; then perrow=2;
+        elif [ "$totalcameras" -eq 4 ]; then perrow=2;
+        elif [ "$totalcameras" -eq 6 ]; then perrow=3;
+        elif [ "$totalcameras" -ge 8 ]; then perrow=4;
+        fi
+
+        echo Per Row: $perrow
+        totalrows=$((($totalcameras+$perrow-1)/$perrow))
+
         echo Total Rows: $totalrows
 
-        columns=$(( $totalcameras / $totalrows ))
+        columns=$((($totalcameras+$totalrows-1)/$totalrows))
         echo Columns: $columns
 
         (( counter = 1 ))
@@ -49,10 +65,6 @@ case "$1" in
         for i in "${cameras[@]}"
         do
             name='Camera_'$counter
-
-            if [ "$demo" = "1" ]; then
-		        i=rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov;
-	        fi
 
             #if camera not already playing, run the command
             if (!(screen -list | grep -q $name)) then
@@ -99,12 +111,6 @@ case "$1" in
     install)
         # Update && Upgrade the Package Manager Sources
         apt-get -y update && apt-get -y upgrade
-
-        #create config file
-        echo "width=1920
-height=1080
-perrow=1
-demo=1" > /home/pi/rtsp_viewer.cfg
 
         # Setup a cron job file
         echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer repair
