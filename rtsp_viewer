@@ -113,9 +113,12 @@ case "$1" in
         apt-get -y update && apt-get -y upgrade
 
         # Setup a cron job file
-        echo "* 6-23 * * * sudo /etc/init.d/rtsp_viewer repair
-0 5 * * * sudo /etc/init.d/rtsp_viewer update
-0 6 * * * sudo reboot" > /etc/cron.d/rtsp_viewer
+        echo "# m h dom mon dow user  command
+* 6-23    * * *   root    sudo /etc/init.d/rtsp_viewer repair
+0 5    * * *   root    root sudo /etc/init.d/rtsp_viewer update
+0 6    * * *   root    sudo reboot
+
+" > /etc/cron.d/rtsp_viewer
 
         #create feeds file
         echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_viewer.txt
