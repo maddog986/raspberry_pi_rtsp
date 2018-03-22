@@ -112,8 +112,8 @@ case "$1" in
 
     install)
         # Update && Upgrade the Package Manager Sources
-        apt-get -y update && apt-get -y upgrade
-
+        apt-get -y update
+        
         # Setup a cron job file
         echo "# m h dom mon dow user  command
 * 6-23    * * *   root    sudo /etc/init.d/rtsp_viewer repair
