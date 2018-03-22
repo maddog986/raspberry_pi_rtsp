@@ -42,7 +42,7 @@ case "$1" in
         elif [ "$totalcameras" -eq 2 ]; then perrow=2;
         elif [ "$totalcameras" -eq 4 ]; then perrow=2;
         elif [ "$totalcameras" -eq 6 ]; then perrow=3;
-        elif [ "$totalcameras" -ge 8 ]; then perrow=4;
+        elif [ "$totalcameras" -ge 8 ]; then perrow=3;
         fi
 
         echo Per Row: $perrow
