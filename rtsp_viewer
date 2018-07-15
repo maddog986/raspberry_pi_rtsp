@@ -116,9 +116,9 @@ case "$1" in
         
         # Setup a cron job file
         echo "# m h dom mon dow user  command
-* 6-23    * * *   root    sudo /etc/init.d/rtsp_viewer repair
-0 5    * * *   root    root sudo /etc/init.d/rtsp_viewer update
-0 6    * * *   root    sudo reboot
+* * * * * root sudo /etc/init.d/rtsp_viewer repair
+0 5 * * * root sudo /etc/init.d/rtsp_viewer update
+0 6 * * * root sudo reboot
 
 " > /etc/cron.d/rtsp_viewer
 
