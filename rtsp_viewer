@@ -123,7 +123,7 @@ case "$1" in
 " > /etc/cron.d/rtsp_viewer
 
         #create feeds file
-        echo "rtsp://184.72.239.149/vod/mp4:BigBuckBunny_175k.mov" > /home/pi/rtsp_viewer.txt
+        echo "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov" > /home/pi/rtsp_viewer.txt
 
         # Install the Packages
         if [ $(dpkg-query -W -f='${Status}' omxplayer 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
